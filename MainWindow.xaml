@@ -1,0 +1,224 @@
+﻿<Window x:Class="EasyShader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:EasyShader"
+        Title="Easy Shader" Height="900" Width="1500" Background="#151515" Foreground="#E0E0E0" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style x:Key="UEButton" TargetType="Button">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#444444"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="UEPrimaryButton" TargetType="Button" BasedOn="{StaticResource UEButton}">
+            <Setter Property="Background" Value="#007FFF"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2299FF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="UEDangerButton" TargetType="Button" BasedOn="{StaticResource UEButton}">
+            <Setter Property="Background" Value="#AA1111"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#CC2222"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="UEToolbarButton" TargetType="Button" BasedOn="{StaticResource UEButton}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#AAAAAA"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2A2A2A"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border Background="#1B1B1B" BorderBrush="#2C2C2C" BorderThickness="0,0,1,0">
+            <DockPanel Margin="15">
+                <StackPanel DockPanel.Dock="Top">
+                    <Grid Margin="0,5,0,20">
+                        <TextBlock Text="Easy Shader" FontSize="22" FontWeight="SemiBold" Foreground="#FFF" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button Content="🌐 EN/中" Style="{StaticResource UEToolbarButton}" Click="Lang_Click" Margin="0,0,5,0"/>
+                            <Button Content="⚙️" Style="{StaticResource UEToolbarButton}" Click="Settings_Click" FontSize="14"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <UniformGrid Columns="2" Margin="0,0,0,20" Height="32">
+                        <Button Content="{DynamicResource t_RefineBtn}" Style="{StaticResource UEButton}" Click="OpenRefine_Click" Foreground="#C084FC" Margin="0,0,5,0"/>
+                        <Button Content="{DynamicResource t_ChatBtn}" Style="{StaticResource UEButton}" Click="OpenChat_Click" Foreground="#38BDF8"/>
+                    </UniformGrid>
+
+                    <TextBlock Text="{DynamicResource t_Prompt}" FontSize="9" Foreground="#555" Margin="0,0,0,5"/>
+                    <Border Background="#0F0F0F" CornerRadius="2" BorderBrush="#333" BorderThickness="1" Margin="0,0,0,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border x:Name="AttachmentBar" Background="#2C2C2C" Visibility="Collapsed" Padding="5" BorderBrush="#444" BorderThickness="0,0,0,1">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📎" Foreground="#38BDF8" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <Border Width="24" Height="24" Background="Black" CornerRadius="2" ClipToBounds="True" Margin="0,0,10,0">
+                                        <Image x:Name="ImgPreview" Stretch="UniformToFill"/>
+                                    </Border>
+                                    <TextBlock x:Name="AttachmentName" Text="" Foreground="#E0E0E0" FontSize="11" VerticalAlignment="Center" MaxWidth="220" TextTrimming="CharacterEllipsis"/>
+                                    <Button Content="✕" Click="RemoveAttachment_Click" Background="Transparent" Foreground="#FF5555" BorderThickness="0" Margin="10,0,0,0" Cursor="Hand"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBox x:Name="PromptInput" Grid.Row="1" Height="140" Background="Transparent" Foreground="#CCC" BorderThickness="0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Padding="8" CaretBrush="White" AllowDrop="True" PreviewDragOver="PromptInput_PreviewDragOver" Drop="PromptInput_Drop" PreviewKeyDown="PromptInput_PreviewKeyDown" Text="做一个蓝色能量流动的全屏 Shader"/>
+
+                            <Button Content="📎 附件" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Background="#222" Foreground="#888" BorderThickness="0" Padding="5,2" FontSize="10" Cursor="Hand" Click="Attach_Click"/>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Text="支持直接拖拽或 Ctrl+V 粘贴图片/视频素材" FontSize="10" Foreground="#666" Margin="0,0,0,15" HorizontalAlignment="Right"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="{DynamicResource t_SettingsHeader}" FontSize="9" Foreground="#555" VerticalAlignment="Center"/>
+                        <Border x:Name="HelpIcon" Margin="8,0,0,0" Background="#333" Width="14" Height="14" CornerRadius="7" Cursor="Help" BorderBrush="#555" BorderThickness="1">
+                            <TextBlock Text="?" FontSize="10" Foreground="#888" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                        </Border>
+                    </StackPanel>
+
+                    <Border Background="#101010" BorderBrush="#2C2C2C" BorderThickness="1" CornerRadius="4" Margin="0,0,0,5">
+                        <StackPanel Margin="12">
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="{DynamicResource t_Parallel}" Foreground="#888" VerticalAlignment="Center" FontSize="11"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Slider x:Name="ParallelSlider" Minimum="1" Maximum="5" Value="1" Width="100" VerticalAlignment="Center" IsSnapToTickEnabled="True" TickFrequency="1"/>
+                                    <TextBlock Text="{Binding ElementName=ParallelSlider, Path=Value}" Width="25" Margin="5,0,0,0" TextAlignment="Right" Foreground="#007FFF" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="{DynamicResource t_Temp}" Foreground="#888" VerticalAlignment="Center" FontSize="11"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Slider x:Name="TempSlider" Minimum="0.1" Maximum="1.0" Value="0.2" TickFrequency="0.1" IsSnapToTickEnabled="True" Width="100" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding ElementName=TempSlider, Path=Value, StringFormat={}{0:F1}}" Width="25" Margin="5,0,0,0" TextAlignment="Right" Foreground="#007FFF" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid>
+                                <TextBlock Text="{DynamicResource t_Tokens}" Foreground="#888" VerticalAlignment="Center" FontSize="11"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Slider x:Name="TokensSlider" Minimum="1024" Maximum="8192" Value="4096" TickFrequency="512" IsSnapToTickEnabled="True" Width="100" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding ElementName=TokensSlider, Path=Value}" Width="35" Margin="5,0,0,0" TextAlignment="Right" Foreground="#007FFF" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <UniformGrid Columns="2" Margin="0,20,0,0" Height="35">
+                        <Button Content="{DynamicResource t_Clear}" Style="{StaticResource UEButton}" Click="NewShader_Click" Margin="0,0,5,0"/>
+                        <Button Content="{DynamicResource t_Export}" Style="{StaticResource UEButton}" Click="Export_Click" Margin="5,0,0,0"/>
+                    </UniformGrid>
+                    <Grid Margin="0,15,0,0" Height="50">
+                        <Button x:Name="ActionBtn" Content="{DynamicResource t_Build}" Style="{StaticResource UEPrimaryButton}" FontSize="14" FontWeight="Bold" Click="ActionBtn_Click"/>
+                    </Grid>
+                </StackPanel>
+                <TextBlock x:Name="StatusText" DockPanel.Dock="Bottom" Foreground="#00E676" FontSize="13" FontWeight="Bold" VerticalAlignment="Bottom" TextWrapping="Wrap"/>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="20,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.3*"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Border Background="#050505" BorderBrush="#2C2C2C" BorderThickness="0,0,0,1" ClipToBounds="True">
+                    <local:D3D11Renderer x:Name="ShaderViewer"/>
+                </Border>
+                <Border x:Name="ErrorOverlay" Background="#DD1A0505" Visibility="Collapsed">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="20">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="⚠️ Compile Error" Foreground="#FF5555" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                            <TextBlock x:Name="ErrorOverlayText" Foreground="#FF9999" FontSize="14" TextWrapping="Wrap" FontFamily="Consolas" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+            <Border Grid.Row="1" Background="#1B1B1B" Padding="15,0">
+                <StackPanel x:Name="ResultSwitcher" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
+                    <TextBlock Text="{DynamicResource t_Variants}" Foreground="#666" VerticalAlignment="Center" FontSize="10" Margin="0,0,10,0"/>
+                    <RadioButton x:Name="VarBtn1" Content="1" Style="{StaticResource {x:Type ToggleButton}}" Width="28" Height="28" Tag="0" Click="SwitchResult_Click" Visibility="Collapsed"/>
+                    <RadioButton x:Name="VarBtn2" Content="2" Style="{StaticResource {x:Type ToggleButton}}" Width="28" Height="28" Tag="1" Click="SwitchResult_Click" Margin="5,0" Visibility="Collapsed"/>
+                    <RadioButton x:Name="VarBtn3" Content="3" Style="{StaticResource {x:Type ToggleButton}}" Width="28" Height="28" Tag="2" Click="SwitchResult_Click" Margin="5,0" Visibility="Collapsed"/>
+                    <RadioButton x:Name="VarBtn4" Content="4" Style="{StaticResource {x:Type ToggleButton}}" Width="28" Height="28" Tag="3" Click="SwitchResult_Click" Margin="5,0" Visibility="Collapsed"/>
+                    <RadioButton x:Name="VarBtn5" Content="5" Style="{StaticResource {x:Type ToggleButton}}" Width="28" Height="28" Tag="4" Click="SwitchResult_Click" Margin="5,0" Visibility="Collapsed"/>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="2" Background="#151515" Padding="15">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="HLSL Code" FontSize="11" FontWeight="Bold" Foreground="#555" VerticalAlignment="Center"/>
+                            <Button Content="{DynamicResource t_Compile}" Style="{StaticResource UEPrimaryButton}" Click="ManualCompile_Click" Margin="20,0,0,0" Padding="15,2"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="{DynamicResource t_Fav}" x:Name="FavBtn" Style="{StaticResource UEButton}" Click="SaveFavorite_Click" Foreground="Gold" Margin="0,0,10,0"/>
+                            <Button Content="{DynamicResource t_Gallery}" Style="{StaticResource UEButton}" Click="OpenGallery_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <Border Background="#0F0F0F" BorderBrush="#2C2C2C" BorderThickness="1">
+                        <TextBox x:Name="CodeOutput" Foreground="#78DCE8" Background="Transparent" BorderThickness="0" FontFamily="Consolas" FontSize="13" Padding="10" CaretBrush="#007FFF" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"/>
+                    </Border>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <Border x:Name="HelpOverlay" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150, 270, 0, 0" IsHitTestVisible="False" Panel.ZIndex="999">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=HelpIcon, Path=IsMouseOver}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <Border Background="#1E293B" BorderBrush="#334155" BorderThickness="1" Padding="15" CornerRadius="6">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="10" Opacity="0.8" Direction="315"/>
+                </Border.Effect>
+                <StackPanel MaxWidth="320">
+                    <TextBlock Text="{DynamicResource t_TipTitle}" FontWeight="Bold" Margin="0,0,0,10" Foreground="#007FFF" FontSize="14"/>
+                    <TextBlock Text="{DynamicResource t_Tip1}" Foreground="#CCC" Margin="0,0,0,10" LineHeight="18" TextWrapping="Wrap"/>
+                    <TextBlock Text="{DynamicResource t_Tip2}" Foreground="#CCC" LineHeight="18" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</Window>

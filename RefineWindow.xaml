@@ -1,0 +1,27 @@
+﻿<Window x:Class="EasyShader.RefineWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource t_RefineTitle}" Height="500" Width="650" Background="#151515" WindowStartupLocation="CenterOwner">
+    <Border Padding="15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="ChatBox" IsReadOnly="True" Background="#0F0F0F" Foreground="#C084FC" TextWrapping="Wrap" Margin="0,0,0,10" BorderBrush="#2C2C2C" BorderThickness="1" Padding="10" VerticalScrollBarVisibility="Auto"/>
+            <StackPanel Grid.Row="1">
+                <Border Background="#0F0F0F" BorderBrush="#333" BorderThickness="1">
+                    <TextBox x:Name="InputBox" Height="70" Background="Transparent" Foreground="White" BorderThickness="0" TextWrapping="Wrap" CaretBrush="White" Padding="5" AcceptsReturn="True" PreviewKeyDown="InputBox_PreviewKeyDown"/>
+                </Border>
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="{DynamicResource t_Send}" Grid.Column="0" Height="32" Click="Send_Click" Background="#333" Foreground="White" BorderThickness="0" Margin="0,0,5,0" Cursor="Hand"/>
+                    <Button Content="{DynamicResource t_Apply}" Grid.Column="1" Height="32" Click="Confirm_Click" Background="#007FFF" Foreground="White" BorderThickness="0" Margin="5,0,0,0" FontWeight="Bold" Cursor="Hand"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
